@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "setup": "ts-node src/index.ts",
+    "setup:emulator": "cross-env NODE_ENV=development ts-node src/index.ts"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "firebase-admin": "^11.11.0",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
