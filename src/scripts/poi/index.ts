@@ -39,13 +39,13 @@ const setMockPoisStorage = async (storage: Storage) => {
 
   const setFilePromises = mockPois.map(({ id }) => {
     const srcDir = path
-      .join("src/assets/", firebaseStorageUrl.images.poi, id)
+      .join("src/assets/", firebaseStorageUrl.images.poi)
       .replace(/\\/g, "/");
     const distDir = path
-      .join(firebaseStorageUrl.images.poi, id)
+      .join(firebaseStorageUrl.images.poi)
       .replace(/\\/g, "/");
-
-    return fs.readdirSync(srcDir).map((filename) => {
+    
+    return fs.readdirSync(srcDir).filter(filename => filename !== '.DS_Store').map((filename) => {
       const srcPath = path.join(srcDir, filename).replace(/\\/g, "/");
       const distPath = path.join(distDir, filename).replace(/\\/g, "/");
 
@@ -60,9 +60,36 @@ const setMockPoisStorage = async (storage: Storage) => {
   await Promise.all(setFilePromises);
 };
 
+const setMockPoisStorage2 = async (storage: Storage) => {
+  const bucket = storage.bucket();
+
+  const srcDir = path
+    .join("src/assets/", firebaseStorageUrl.images.poi)
+    .replace(/\\/g, "/");
+  const distDir = path
+    .join(firebaseStorageUrl.images.poi)
+    .replace(/\\/g, "/");
+  
+  const files = fs.readdirSync(srcDir).filter(filename => filename !== '.DS_Store');
+  
+  const setFilePromises = files.map((filename) => {
+    const srcPath = path.join(srcDir, filename).replace(/\\/g, "/");
+    const distPath = path.join(distDir, filename).replace(/\\/g, "/");
+
+    return bucket.upload(srcPath, {
+      destination: distPath,
+      metadata: {
+        contentType: "image/jpeg",
+      },
+    });
+  });
+
+  await Promise.all(setFilePromises);
+};
+
 const setMockPois = async (firestore: Firestore, storage: Storage) => {
   await setMockPoisFirestore(firestore);
-  await setMockPoisStorage(storage);
+  await setMockPoisStorage2(storage);
 };
 
 export const setupMockPois = async (firestore: Firestore, storage: Storage) => {
