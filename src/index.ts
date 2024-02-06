@@ -11,11 +11,8 @@ const setup = () => {
 };
 
 const setupData = async (firebase: ReturnType<typeof initializeFirebase>) => {
-  await scripts.cluster.setupMockClusters(firebase.firestore);
   await scripts.poi.setupMockPois(firebase.firestore, firebase.storage);
   await scripts.user.setupMockUser(firebase.auth, firebase.firestore);
-  await scripts.resource.setupMockResources(firebase.firestore);
-  await scripts.resourceGroup.setupMockResourceGroups(firebase.firestore);
 }
 
 const main = async () => {
